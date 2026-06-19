@@ -1,4 +1,4 @@
-# ParkSight AI 🚔
+# ParkSight AI 
 
 **AI-Driven Parking Intelligence for Congestion-Aware Targeted Enforcement**
 
