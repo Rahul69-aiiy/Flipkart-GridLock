@@ -1,4 +1,4 @@
-# ParkSight AI 🚔
+# ParkSight AI 
 
 **AI-Driven Parking Intelligence for Congestion-Aware Targeted Enforcement**
 
@@ -226,29 +226,29 @@ for Swagger API documentation.
 
 ## Tested Endpoints
 
-✅ `/health`
+1. `/health`
 
-✅ `/api/summary`
+2. `/api/summary`
 
-✅ `/api/hotspots`
+3. `/api/hotspots`
 
-✅ `/api/cip`
+4. `/api/cip`
 
-✅ `/api/forecast`
+5. `/api/forecast`
 
-✅ `/api/confidence`
+6. `/api/confidence`
 
-✅ `/api/opportunities`
+7. `/api/opportunities`
 
-✅ `/api/value-proof`
+8. `/api/value-proof`
 
-✅ `/api/stations`
+9. `/api/stations`
 
-✅ `/api/coverage`
+10. `/api/coverage`
 
-✅ `/api/plan/resource`
+11. `/api/plan/resource`
 
-✅ `/api/plan/target`
+12. `/api/plan/target`
 
 ---
 
