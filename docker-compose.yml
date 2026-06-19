@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  parksight:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the CSV file into the container
+      - ./jan to may police violation_anonymized791b166.csv:/app/data/dataset.csv:ro
+      # Persist trained ML models between restarts
+      - parksight_models:/app/trained_models
+    environment:
+      CSV_PATH: /app/data/dataset.csv
+      MODEL_DIR: /app/trained_models
+    restart: unless-stopped
+
+volumes:
+  parksight_models:

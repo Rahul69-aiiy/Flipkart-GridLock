@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-navy-700;
+  }
+
+  body {
+    @apply bg-navy-950 text-slate-200 font-sans antialiased;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(0, 212, 255, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-cyan/40;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-navy-900/60 backdrop-blur-glass border border-white/5 rounded-2xl shadow-card;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:border-accent-cyan/20 hover:shadow-glow;
+  }
+
+  .neon-text {
+    @apply text-accent-cyan;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 transition-all duration-200;
+  }
+
+  .sidebar-item:hover {
+    @apply text-slate-200 bg-white/5;
+  }
+
+  .sidebar-item-active {
+    @apply sidebar-item text-accent-cyan bg-accent-blue/10 border border-accent-blue/20 shadow-glow-blue;
+  }
+
+  .kpi-value {
+    @apply text-2xl font-bold tracking-tight text-white;
+  }
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply text-left text-xs font-semibold uppercase tracking-wider text-slate-500 px-4 py-3 border-b border-white/5;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 border-b border-white/5 text-slate-300;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-white/[0.02];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-blue to-accent-cyan text-white font-semibold text-sm transition-all duration-200 hover:shadow-glow-blue hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-300 font-medium text-sm transition-all duration-200 hover:bg-white/10 hover:text-white;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-xl bg-navy-800/80 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-accent-cyan/50 focus:ring-1 focus:ring-accent-cyan/30 transition-all;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium;
+  }
+
+  .badge-green {
+    @apply badge bg-accent-green/15 text-accent-green border border-accent-green/20;
+  }
+
+  .badge-yellow {
+    @apply badge bg-accent-orange/15 text-accent-orange border border-accent-orange/20;
+  }
+
+  .badge-red {
+    @apply badge bg-accent-red/15 text-accent-red border border-accent-red/20;
+  }
+
+  .badge-blue {
+    @apply badge bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/20;
+  }
+}
+
+/* Leaflet dark theme overrides */
+.leaflet-container {
+  background: #07111F !important;
+  font-family: 'Inter', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #0B1526 !important;
+  color: #e2e8f0 !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background: #0B1526 !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 16px !important;
+  font-size: 13px !important;
+}
+
+.leaflet-control-zoom a {
+  background: #0B1526 !important;
+  color: #94a3b8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #101C2F !important;
+  color: #00D4FF !important;
+}
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(0, 212, 255, 0.2) !important;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: rgba(0, 212, 255, 0.6) !important;
+  color: #07111F !important;
+  font-weight: 700 !important;
+}

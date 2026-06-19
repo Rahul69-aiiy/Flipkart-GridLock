@@ -255,6 +255,12 @@ for Swagger API documentation.
 ## Project Structure
 
 ```text
+frontend/          # React dashboard (Vite + Tailwind + Recharts + Leaflet)
+├── src/
+│   ├── api/       # Axios API client
+│   ├── components/
+│   ├── pages/     # 10 dashboard pages + settings
+│   └── store/     # Zustand global state
 backend/
 ├── app.py
 ├── routes/
@@ -268,14 +274,42 @@ backend/
 
 ---
 
+## Frontend Dashboard
+
+Enterprise dark-theme command-center UI with sidebar navigation, live API integration, Leaflet maps, and Recharts visualizations.
+
+### Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173** (proxies `/api` → `http://localhost:8000`)
+
+### Dashboard Pages
+
+| Page | Route | API |
+|------|-------|-----|
+| Overview | `/` | `GET /api/summary` |
+| Hotspot Intelligence | `/hotspots` | `GET /api/hotspots` |
+| CIP Dashboard | `/cip` | `GET /api/cip` |
+| Forecasting | `/forecast` | `GET /api/forecast` |
+| Confidence Engine | `/confidence` | `GET /api/confidence` |
+| Opportunities | `/opportunities` | `GET /api/opportunities` |
+| Resource Planner | `/resource-planner` | `POST /api/plan/resource` |
+| Target Planner | `/target-planner` | `POST /api/plan/target` |
+| Value Proof | `/value-proof` | `GET /api/value-proof` |
+| Station Analytics | `/stations` | `GET /api/stations` |
+| Coverage Analysis | `/coverage` | `GET /api/coverage` |
+
+---
+
 ## Future Enhancements
 
 * Real-time traffic integration
-* Interactive GIS dashboard
 * Explainable AI (SHAP)
 * Live officer deployment recommendations
 * City-wide congestion simulation
 * Multi-city scalability
-
-```
-```

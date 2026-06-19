@@ -17,3 +17,6 @@ backend/trained_models/*.pkl
 
 .vscode/
 .idea/
+
+frontend/node_modules/
+frontend/dist/

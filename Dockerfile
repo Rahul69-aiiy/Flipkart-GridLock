@@ -4,7 +4,6 @@ WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
-# Output straight to /app/static (will be copied into backend stage)
 ENV VITE_OUT_DIR=/app/static
 RUN npm run build
 
@@ -15,13 +14,10 @@ WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source code
 COPY backend/ .
-
-# Copy built frontend from Stage 1
 COPY --from=frontend-builder /app/static ./static
 
-# CSV must be mounted at runtime — see docker-compose.yml
+# CSV is volume-mounted at runtime
 ENV CSV_PATH=/app/data/dataset.csv
 ENV MODEL_DIR=/app/trained_models
 
