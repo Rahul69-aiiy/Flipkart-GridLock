@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+
+.env
+venv/
+.venv/
+
+trained_models/*.joblib
+trained_models/*.pkl
+
+*.csv
+*.xlsx
+*.parquet
+
+.vscode/
+.idea/
