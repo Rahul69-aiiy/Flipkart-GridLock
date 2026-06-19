@@ -1,44 +1,208 @@
-# ParkSight AI 
+# ParkSight AI 🚔
 
 **AI-Driven Parking Intelligence for Congestion-Aware Targeted Enforcement**
 
-Built on 298,450 Bengaluru Traffic Police parking violation records (Nov 2023 – Apr 2024).
+ParkSight AI is a data-driven decision support system built on **298,450 Bengaluru Traffic Police parking violation records (Nov 2023 – Apr 2024)**. The platform identifies high-impact parking hotspots, predicts future congestion risk, ranks enforcement opportunities, and optimizes officer deployment using machine learning and operations research.
 
 ---
 
-## Architecture — 10 Analytical Modules
+## Key Features
 
-| Module | Name | Endpoint | Description |
-|--------|------|----------|-------------|
-| M0 | Data Validation | `GET /api/summary` | Dataset stats & quality audit |
-| M1 | Hotspot Intelligence | `GET /api/hotspots` | Junction CIP ranking + DBSCAN clusters |
-| M2 | CIP Engine | `GET /api/cip` | Congestion Impact Potential scores |
-| M3 | Forecasting | `GET /api/forecast` | XGBoost vs moving-average predictions |
-| M4 | Confidence Engine | `GET /api/confidence` | Data-reliability scores per junction |
-| M5 | Opportunity Engine | `GET /api/opportunities` | Ranked enforcement opportunities |
-| M6 | Enforcement Planning | `POST /api/plan/resource` | OR-Tools CP-SAT optimisation |
-| M6b | Target Planning | `POST /api/plan/target` | Minimise hours for target coverage |
-| M7 | Value Proof | `GET /api/value-proof` | Naive vs optimised comparison |
-| M8 | Station Efficiency | `GET /api/stations` | Per-station performance metrics |
-| M9 | Coverage Curve | `GET /api/coverage` | Optimal staffing knee-point analysis |
+* Congestion Impact Potential (CIP) scoring framework
+* Hotspot detection using DBSCAN clustering
+* Junction-level congestion forecasting using XGBoost
+* Confidence scoring for data reliability
+* Opportunity ranking engine for targeted enforcement
+* Resource-constrained deployment optimization
+* Target-coverage planning optimization
+* Station-level performance analytics
+* Coverage-efficiency analysis
 
 ---
 
-## CIP Formula
+## System Architecture
 
-```
+### M0 — Data Validation
+
+**Endpoint:** `GET /api/summary`
+
+Performs dataset quality checks, filtering statistics, date-range analysis, and validation reporting.
+
+### M1 — Hotspot Intelligence
+
+**Endpoint:** `GET /api/hotspots`
+
+* Junction-level hotspot ranking
+* Spatial hotspot discovery using DBSCAN clustering
+* Cluster centroid and density analysis
+
+### M2 — Congestion Impact Potential (CIP) Engine
+
+**Endpoint:** `GET /api/cip`
+
+Computes congestion impact scores using weighted violation severity, vehicle type, time-of-day effects, and repeat violation behavior.
+
+### M3 — Forecasting Engine
+
+**Endpoint:** `GET /api/forecast`
+
+Forecasts future junction risk using:
+
+* Moving Average Baseline
+* XGBoost Regressor
+* Automatic model selection based on MAE
+
+Current implementation selects the model with lower prediction error.
+
+### M4 — Confidence Engine
+
+**Endpoint:** `GET /api/confidence`
+
+Generates confidence scores based on:
+
+* Historical consistency
+* Data completeness
+* Observation density
+
+### M5 — Opportunity Engine
+
+**Endpoint:** `GET /api/opportunities`
+
+Ranks enforcement opportunities using:
+
+Opportunity Score = Predicted CIP × Confidence Score
+
+Each opportunity also includes:
+
+* Required officer-hours
+* Peak enforcement window
+* Police station ownership
+* Geographic coordinates
+
+### M6 — Resource-Constrained Planning
+
+**Endpoint:** `POST /api/plan/resource`
+
+Uses Google OR-Tools CP-SAT optimization to maximize congestion reduction under a limited officer-hour budget.
+
+### M6b — Target-Coverage Planning
+
+**Endpoint:** `POST /api/plan/target`
+
+Determines the minimum officer-hours required to achieve a desired enforcement coverage target.
+
+### M7 — Value Proof Engine
+
+**Endpoint:** `GET /api/value-proof`
+
+Compares optimized deployment strategies against naïve allocation approaches.
+
+### M8 — Station Efficiency Analytics
+
+**Endpoint:** `GET /api/stations`
+
+Provides station-level productivity and enforcement effectiveness metrics.
+
+### M9 — Coverage Curve Analysis
+
+**Endpoint:** `GET /api/coverage`
+
+Identifies staffing knee-points and diminishing-return regions for enforcement planning.
+
+---
+
+## Congestion Impact Potential (CIP)
+
+CIP is computed using:
+
 CIP = vehicle_weight × violation_weight × time_weight × multi_violation_factor
-```
 
-### Officer-Hours (Data-Driven)
+The score estimates the expected congestion impact of a parking violation.
 
-For each junction, officer-hours are computed from historical violation
-concentration patterns — **not** a fixed 1:1 assumption:
+---
 
-1. Aggregate violations by hour of day
-2. Rank hours by violation count (descending)
-3. Find minimum hours to cover ≥ 80% of violations
-4. Store `required_officer_hours` and `peak_enforcement_window`
+## Data-Driven Officer Hour Estimation
+
+Unlike fixed staffing assumptions, ParkSight AI derives officer-hour requirements from historical enforcement patterns.
+
+For each junction:
+
+1. Aggregate violations by hour
+2. Rank hours by violation frequency
+3. Identify minimum hours covering 80% of violations
+4. Store:
+
+   * `required_officer_hours`
+   * `peak_window_start`
+   * `peak_window_end`
+
+---
+
+## Machine Learning Pipeline
+
+### Forecasting Features
+
+* Weekly CIP aggregation
+* Lag features (1–4 weeks)
+* Rolling mean (4 weeks)
+* Rolling standard deviation (4 weeks)
+
+### Models
+
+* Moving Average Baseline
+* XGBoost Regressor
+
+### Model Selection
+
+The system automatically selects the model with the lower Mean Absolute Error (MAE).
+
+---
+
+## Optimization Pipeline
+
+Dataset
+↓
+CIP Scoring
+↓
+Hotspot Detection
+↓
+Forecasting (XGBoost)
+↓
+Confidence Scoring
+↓
+Opportunity Ranking
+↓
+OR-Tools Optimization
+↓
+Deployment Plan
+
+---
+
+## Technology Stack
+
+### Backend
+
+* FastAPI
+* Pydantic v2
+
+### Machine Learning
+
+* XGBoost
+* Scikit-Learn
+* DBSCAN
+
+### Optimization
+
+* Google OR-Tools CP-SAT
+
+### Data Processing
+
+* Pandas
+* NumPy
+
+### Analytics
+
+* Kneed
 
 ---
 
@@ -46,88 +210,72 @@ concentration patterns — **not** a fixed 1:1 assumption:
 
 ```bash
 cd backend
+
 pip install -r requirements.txt
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
+
+uvicorn app:app --reload
 ```
 
-Open **http://localhost:8000/docs** for interactive Swagger UI.
+Open:
 
-## Docker
+http://localhost:8000/docs
 
-```bash
-docker build -t parksight-ai .
-docker run -p 8000:8000 -v $(pwd)/../jan\ to\ may\ police\ violation_anonymized791b166.csv:/app/../jan\ to\ may\ police\ violation_anonymized791b166.csv parksight-ai
-```
+for Swagger API documentation.
 
 ---
 
-## Tech Stack
+## Tested Endpoints
 
-- **Framework**: FastAPI 0.115
-- **ML**: XGBoost, scikit-learn (DBSCAN)
-- **Optimisation**: Google OR-Tools CP-SAT
-- **Data**: pandas, NumPy
-- **Validation**: Pydantic v2
-- **Curve Analysis**: kneed
+✅ `/health`
+
+✅ `/api/summary`
+
+✅ `/api/hotspots`
+
+✅ `/api/cip`
+
+✅ `/api/forecast`
+
+✅ `/api/confidence`
+
+✅ `/api/opportunities`
+
+✅ `/api/value-proof`
+
+✅ `/api/stations`
+
+✅ `/api/coverage`
+
+✅ `/api/plan/resource`
+
+✅ `/api/plan/target`
 
 ---
 
 ## Project Structure
 
-```
+```text
 backend/
-├── app.py                    # FastAPI entry point
-├── requirements.txt
-├── Dockerfile
-├── .env.example
-├── utils/
-│   ├── config.py             # Pydantic BaseSettings
-│   └── weights.py            # Vehicle/violation/time weights
+├── app.py
+├── routes/
 ├── services/
-│   ├── data_loader.py        # Singleton DataStore + officer-hours
-│   ├── preprocessing.py      # JSON parsing, IST conversion
-│   ├── summary_service.py    # M0: Data validation
-│   ├── hotspot_service.py    # M1: Hotspot detection
-│   ├── cip_service.py        # M2: CIP scoring
-│   ├── forecast_service.py   # M3: XGBoost forecasting
-│   ├── confidence_service.py # M4: Confidence scoring
-│   ├── opportunity_service.py# M5: Opportunity ranking
-│   ├── plan_service.py       # M6: OR-Tools enforcement planning
-│   ├── value_proof_service.py# M7: Strategy comparison
-│   ├── station_service.py    # M8: Station efficiency
-│   └── coverage_service.py   # M9: Coverage curve
-├── schemas/                  # Pydantic response models
-├── routes/                   # FastAPI routers
+├── schemas/
 ├── models/
-│   └── training.py           # XGBoost pipeline
+├── utils/
 ├── data/
 └── trained_models/
 ```
 
 ---
 
-## Example API Calls
+## Future Enhancements
 
-### Get Summary
-```bash
-curl http://localhost:8000/api/summary
+* Real-time traffic integration
+* Interactive GIS dashboard
+* Explainable AI (SHAP)
+* Live officer deployment recommendations
+* City-wide congestion simulation
+* Multi-city scalability
+
 ```
-
-### Get Top-20 Hotspots
-```bash
-curl "http://localhost:8000/api/hotspots?top_n=20"
-```
-
-### Resource-Constrained Planning
-```bash
-curl -X POST http://localhost:8000/api/plan/resource \
-  -H "Content-Type: application/json" \
-  -d '{"officer_hours": 15}'
-```
-
-### Target Coverage Planning
-```bash
-curl -X POST http://localhost:8000/api/plan/target \
-  -H "Content-Type: application/json" \
-  -d '{"target_coverage": 80}'
 ```
