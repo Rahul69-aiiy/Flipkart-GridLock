@@ -9,6 +9,8 @@ venv/
 trained_models/*.joblib
 trained_models/*.pkl
 
+backend/trained_models/*.joblib
+backend/trained_models/*.pkl
 *.csv
 *.xlsx
 *.parquet

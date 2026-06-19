@@ -20,7 +20,7 @@ class DBSCANCluster(BaseModel):
     centroid_lat: float
     centroid_lon: float
     size: int
-    avg_cip: float
+    total_cip: float
 
 
 class DBSCANInfo(BaseModel):

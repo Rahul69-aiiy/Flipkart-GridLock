@@ -57,55 +57,58 @@ def get_hotspots(top_n: int = 50) -> dict:
             "unique_vehicles": int(row.get("unique_vehicles", 0)),
         })
 
-    # --- DBSCAN clustering on ALL records ---
+    # DBSCAN clustering on junctions
     dbscan_result = {"n_clusters": 0, "noise_points": 0, "top_clusters": []}
-    try:
-        coords = df[["latitude", "longitude"]].dropna()
-        if len(coords) >= 100:
-            clustering = DBSCAN(eps=0.002, min_samples=50, n_jobs=-1).fit(
-                coords.values
-            )
-            labels = clustering.labels_
-            n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-            noise_points = int((labels == -1).sum())
 
-            coords_with_labels = coords.copy()
-            coords_with_labels["cluster"] = labels
-            coords_with_labels = coords_with_labels.merge(
-                df[["latitude", "longitude", "record_cip"]],
-                on=["latitude", "longitude"],
-                how="left",
+    try:
+        coords = jcip[["latitude", "longitude"]].dropna()
+
+        if len(coords) >= 5:
+
+            clustering = DBSCAN(
+                eps=0.01,
+                min_samples=3
+            ).fit(coords)
+
+            clustered = jcip.copy()
+            clustered["cluster"] = clustering.labels_
+
+            n_clusters = len(set(clustering.labels_)) - (
+                1 if -1 in clustering.labels_ else 0
             )
+
+            noise_points = int((clustered["cluster"] == -1).sum())
 
             cluster_stats = (
-                coords_with_labels[coords_with_labels["cluster"] != -1]
+                clustered[clustered["cluster"] != -1]
                 .groupby("cluster")
                 .agg(
                     centroid_lat=("latitude", "mean"),
                     centroid_lon=("longitude", "mean"),
+                    total_cip=("total_cip", "sum"),
                     size=("cluster", "size"),
-                    avg_cip=("record_cip", "mean"),
                 )
                 .reset_index()
-                .sort_values("size", ascending=False)
-                .head(10)
+                .sort_values("total_cip", ascending=False)
             )
 
             top_clusters = []
-            for _, cr in cluster_stats.iterrows():
+
+            for _, row in cluster_stats.iterrows():
                 top_clusters.append({
-                    "cluster_id": int(cr["cluster"]),
-                    "centroid_lat": round(float(cr["centroid_lat"]), 6),
-                    "centroid_lon": round(float(cr["centroid_lon"]), 6),
-                    "size": int(cr["size"]),
-                    "avg_cip": round(float(cr["avg_cip"]), 4),
+                    "cluster_id": int(row["cluster"]),
+                    "centroid_lat": round(float(row["centroid_lat"]), 6),
+                    "centroid_lon": round(float(row["centroid_lon"]), 6),
+                    "size": int(row["size"]),
+                    "total_cip": round(float(row["total_cip"]), 2),
                 })
 
             dbscan_result = {
-                "n_clusters": n_clusters,
+                "n_clusters": int(n_clusters),
                 "noise_points": noise_points,
                 "top_clusters": top_clusters,
             }
+
     except Exception as exc:
         logger.warning("DBSCAN clustering failed: %s", exc)
 
