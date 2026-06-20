@@ -29,10 +29,10 @@ export default function SettingsPage() {
             <span className="text-sm font-medium text-white">API Connection</span>
           </div>
           <p className="text-sm text-slate-400">
-            Backend: <code className="text-accent-cyan">http://localhost:8000</code>
+            Backend: <code className="text-accent-cyan">{import.meta.env.VITE_API_URL || 'http://localhost:8000'}</code>
           </p>
           <p className={`text-sm mt-1 font-medium ${apiHealthy ? 'text-accent-green' : apiHealthy === false ? 'text-accent-red' : 'text-slate-500'}`}>
-            Status: {apiHealthy ? '● Connected' : apiHealthy === false ? '● Offline — run: uvicorn app:app --reload' : '○ Checking...'}
+            Status: {apiHealthy ? '● Connected' : apiHealthy === false ? '● Backend Unreachable' : '○ Checking...'}
           </p>
         </div>
       </motion.div>
