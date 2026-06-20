@@ -51,9 +51,8 @@
 | **M5 — Opportunity Engine** | `GET /api/opportunities` | Ranks enforcement opportunities (`Opportunity Score = Predicted CIP × Confidence Score`). |
 | **M6 — Resource Planning** | `POST /api/plan/resource` | OR-Tools CP-SAT optimization to maximize congestion reduction under budget. |
 | **M6b — Target Planning** | `POST /api/plan/target` | Determines minimum officer-hours required to achieve target coverage. |
-| **M7 — Value Proof** | `GET /api/value-proof` | Compares optimized deployment vs. naïve allocation approaches. |
-| **M8 — Station Efficiency** | `GET /api/stations` | Station-level productivity and enforcement effectiveness metrics. |
-| **M9 — Coverage Analysis** | `GET /api/coverage` | Identifies staffing knee-points and diminishing-return regions. |
+| **M7 — Station Efficiency** | `GET /api/stations` | Station-level productivity and enforcement effectiveness metrics. |
+| **M8 — Coverage Analysis** | `GET /api/coverage` | Identifies staffing knee-points and diminishing-return regions. |
 
 ---
 
