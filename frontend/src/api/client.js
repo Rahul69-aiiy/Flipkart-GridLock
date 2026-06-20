@@ -3,7 +3,7 @@ import axios from 'axios'
 // In dev: Vite proxies /api → http://localhost:8000
 // In prod: frontend is served by FastAPI itself, so /api is on the same origin
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api`,
   timeout: 60000,
   headers: { 'Content-Type': 'application/json' },
 })
@@ -26,6 +26,13 @@ export const fetchStations      = ()           => api.get('/stations').then((r) 
 export const fetchCoverage      = ()           => api.get('/coverage').then((r) => r.data)
 export const postResourcePlan   = (officerHours)    => api.post('/plan/resource', { officer_hours: officerHours }).then((r) => r.data)
 export const postTargetPlan     = (targetCoverage)  => api.post('/plan/target', { target_coverage: targetCoverage }).then((r) => r.data)
-export const fetchHealth        = ()           => axios.get('/health', { timeout: 5000 }).then((r) => r.data).catch(() => null)
+export const fetchHealth = () =>
+  axios
+    .get(
+      `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/health`,
+      { timeout: 5000 }
+    )
+    .then((r) => r.data)
+    .catch(() => null)
 
 export default api
