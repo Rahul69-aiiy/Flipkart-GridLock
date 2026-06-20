@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { Search, Bell, Calendar, LogOut } from 'lucide-react'
+import { Search, Calendar, LogOut } from 'lucide-react'
 import useStore from '@/store/useStore'
 import { fetchSummary } from '@/api/client'
 import { formatDateRange } from '@/lib/utils'
@@ -55,10 +55,6 @@ export default function TopNav() {
               className="input-field pl-10 w-64 py-2"
             />
           </div>
-
-          <button className="relative p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors" title="Notifications">
-            <Bell className="w-4 h-4 text-slate-400" />
-          </button>
 
           <button
             onClick={() => useStore.getState().logout()}
