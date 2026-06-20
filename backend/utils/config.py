@@ -10,10 +10,13 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Application settings loaded from environment variables and .env file."""
 
-    csv_path: str = os.path.join(
+    csv_path: str = os.getenv(
+    "CSV_PATH",
+    os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "jan to may police violation_anonymized791b166.csv",
-    )
+    ),
+)
     model_dir: str = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
         "trained_models",
