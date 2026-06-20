@@ -20,7 +20,7 @@
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 **Frontend Command Center**<br/>
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
@@ -39,7 +39,7 @@
 
 ---
 
-## 🏗️ System Architecture & Engines
+## System Architecture & Engines
 
 | Engine | Endpoint | Description |
 |--------|----------|-------------|
@@ -56,7 +56,7 @@
 
 ---
 
-## 🧠 Machine Learning & Optimization Pipeline
+## Machine Learning & Optimization Pipeline
 
 ```mermaid
 graph TD;
@@ -74,7 +74,7 @@ graph TD;
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Backend Setup
 ```bash
@@ -96,7 +96,7 @@ Dashboard Access: [http://localhost:5173](http://localhost:5173) *(Proxies API t
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 flipkart/
@@ -119,10 +119,10 @@ flipkart/
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
-- 🔄 Real-time traffic camera integration
-- 🧩 Explainable AI (SHAP) for decision transparency
-- 📱 Live officer deployment recommendations & mobile app
-- 🏙️ City-wide congestion simulation
-- 🌍 Multi-city scalability
+- Real-time traffic camera integration
+- Explainable AI (SHAP) for decision transparency
+- Live officer deployment recommendations & mobile app
+- City-wide congestion simulation
+- Multi-city scalability
