@@ -47,7 +47,7 @@
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 transition-all duration-200;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 transition-all duration-200 border border-transparent;
   }
 
   .sidebar-item:hover {
@@ -55,7 +55,7 @@
   }
 
   .sidebar-item-active {
-    @apply sidebar-item text-accent-cyan bg-accent-blue/10 border border-accent-blue/20 shadow-glow-blue;
+    @apply sidebar-item bg-white/5 border-white/10 text-white hover:bg-white/10;
   }
 
   .kpi-value {
@@ -113,8 +113,12 @@
 
 /* Leaflet dark theme overrides */
 .leaflet-container {
-  background: #07111F !important;
+  background: #0e1726 !important;
   font-family: 'Inter', sans-serif;
+}
+
+.leaflet-tile-container {
+  filter: brightness(1.65) contrast(0.9) saturate(0.65);
 }
 
 .leaflet-popup-content-wrapper {

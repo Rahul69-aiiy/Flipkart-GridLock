@@ -1,13 +1,18 @@
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, Server, Database } from 'lucide-react'
 import useStore from '@/store/useStore'
 import { useFetchData } from '@/components/common/DataStates'
-import { fetchSummary } from '@/api/client'
+import { fetchSummary, fetchHealth } from '@/api/client'
 import { formatNumber, formatDateRange } from '@/lib/utils'
 
 export default function SettingsPage() {
-  const { apiHealthy } = useStore()
+  const { apiHealthy, setApiHealthy } = useStore()
   const { data: summary, loading } = useFetchData(fetchSummary)
+
+  useEffect(() => {
+    fetchHealth().then((h) => setApiHealthy(h?.status === 'healthy'))
+  }, [setApiHealthy])
 
   return (
     <div className="space-y-6 max-w-3xl">

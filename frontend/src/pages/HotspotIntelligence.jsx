@@ -3,14 +3,26 @@ import { MapPin, AlertTriangle } from 'lucide-react'
 import HotspotMap from '@/components/maps/HotspotMap'
 import DataTable from '@/components/common/DataTable'
 import { LoadingState, ErrorState, useFetchData } from '@/components/common/DataStates'
+import useStore from '@/store/useStore'
 import { fetchHotspots } from '@/api/client'
 import { formatNumber } from '@/lib/utils'
 
 export default function HotspotIntelligence() {
   const { data, loading, error, reload } = useFetchData(() => fetchHotspots(50))
+  const searchQuery = useStore((s) => s.searchQuery)
 
   if (loading) return <LoadingState message="Loading hotspot intelligence..." />
   if (error) return <ErrorState error={error} onRetry={reload} />
+
+  const hotspotsList = data.hotspots || []
+  const filteredHotspots = hotspotsList.filter((m) => {
+    if (!searchQuery) return true
+    const q = searchQuery.toLowerCase()
+    return (
+      m.junction_name?.toLowerCase().includes(q) ||
+      m.police_station?.toLowerCase().includes(q)
+    )
+  })
 
   const columns = [
     {
@@ -48,7 +60,7 @@ export default function HotspotIntelligence() {
           <MapPin className="w-5 h-5 text-accent-cyan" />
           <div>
             <p className="text-xs text-slate-500">Total Hotspots</p>
-            <p className="text-lg font-bold text-white">{data.total_hotspots}</p>
+            <p className="text-lg font-bold text-white">{filteredHotspots.length}</p>
           </div>
         </div>
         <div className="glass-card px-4 py-3 flex items-center gap-3">
@@ -68,7 +80,7 @@ export default function HotspotIntelligence() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="xl:col-span-3 glass-card p-5">
           <h3 className="text-sm font-semibold text-white mb-4">Hotspot Map Visualization</h3>
           <HotspotMap
-            markers={data.hotspots}
+            markers={filteredHotspots}
             height="560px"
             renderPopup={(m) => `
               <div style="min-width:220px">
@@ -88,7 +100,7 @@ export default function HotspotIntelligence() {
           <p className="text-xs text-slate-500 mb-4">Ranked by congestion impact</p>
           <DataTable
             columns={columns}
-            data={data.hotspots.slice(0, 10)}
+            data={filteredHotspots.slice(0, 10)}
             searchable={false}
             pageSize={10}
           />
@@ -97,7 +109,7 @@ export default function HotspotIntelligence() {
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-5">
         <h3 className="text-sm font-semibold text-white mb-4">All Hotspots</h3>
-        <DataTable columns={columns} data={data.hotspots} searchPlaceholder="Search junctions..." />
+        <DataTable columns={columns} data={filteredHotspots} searchPlaceholder="Search junctions..." />
       </motion.div>
     </div>
   )

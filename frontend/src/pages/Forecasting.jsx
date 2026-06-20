@@ -8,15 +8,8 @@ import KPICard from '@/components/common/KPICard'
 import DataTable from '@/components/common/DataTable'
 import { LoadingState, ErrorState, useFetchData } from '@/components/common/DataStates'
 import { fetchForecast } from '@/api/client'
+import GlassTooltip from '@/components/common/GlassTooltip'
 import { formatNumber, getTrendBadge } from '@/lib/utils'
-
-const TOOLTIP_STYLE = {
-  backgroundColor: '#0B1526',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: '12px',
-  color: '#e2e8f0',
-  fontSize: '12px',
-}
 
 const TREND_COLORS = { increasing: '#10B981', stable: '#F59E0B', decreasing: '#EF4444' }
 
@@ -116,7 +109,7 @@ export default function Forecasting() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} angle={-35} textAnchor="end" height={80} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={TOOLTIP_STYLE} labelFormatter={(_, p) => p?.[0]?.payload?.fullName} />
+              <Tooltip content={<GlassTooltip labelFormatter={(_, p) => p?.[0]?.payload?.fullName} />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
               <Legend wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }} />
               <Bar dataKey="historical" fill="#3B82F6" name="Historical Avg CIP" radius={[4, 4, 0, 0]} />
               <Bar dataKey="predicted" fill="#8B5CF6" name="Predicted CIP" radius={[4, 4, 0, 0]} />
@@ -128,10 +121,10 @@ export default function Forecasting() {
           <h3 className="text-sm font-semibold text-white mb-4">Trend Distribution</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
-              <Pie data={trendPie} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value">
+              <Pie data={trendPie} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value" nameKey="name">
                 {trendPie.map((d, i) => <Cell key={i} fill={d.color} />)}
               </Pie>
-              <Tooltip contentStyle={TOOLTIP_STYLE} />
+              <Tooltip content={<GlassTooltip />} />
             </PieChart>
           </ResponsiveContainer>
           <div className="space-y-2 mt-4">

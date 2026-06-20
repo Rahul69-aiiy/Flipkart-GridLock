@@ -15,15 +15,8 @@ import { PieChart, Target, TrendingDown, Zap } from 'lucide-react'
 import KPICard from '@/components/common/KPICard'
 import { LoadingState, ErrorState, useFetchData } from '@/components/common/DataStates'
 import { fetchCoverage } from '@/api/client'
+import GlassTooltip from '@/components/common/GlassTooltip'
 import { formatNumber } from '@/lib/utils'
-
-const chartTooltipStyle = {
-  backgroundColor: '#0B1526',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: '12px',
-  color: '#e2e8f0',
-  fontSize: '12px',
-}
 
 export default function CoverageAnalysis() {
   const { data, loading, error, reload } = useFetchData(fetchCoverage)
@@ -74,9 +67,7 @@ export default function CoverageAnalysis() {
               <XAxis dataKey="officer_hours" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} label={{ value: 'Officer Hours', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 11 }} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
               <Tooltip
-                contentStyle={chartTooltipStyle}
-                formatter={(v, name) => [typeof v === 'number' ? v.toFixed(1) + '%' : v, name]}
-                labelFormatter={(h) => `${h} officer hours`}
+                content={<GlassTooltip formatter={(v, name) => [typeof v === 'number' ? v.toFixed(1) + '%' : v, name]} labelFormatter={(h) => `${h} officer hours`} />}
               />
               <Area type="monotone" dataKey="coverage_pct" stroke="#00D4FF" fill="url(#covGrad)" strokeWidth={2} name="Coverage %" />
               {kneeEntry && (
@@ -128,8 +119,7 @@ export default function CoverageAnalysis() {
             <XAxis dataKey="hours" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip
-              contentStyle={chartTooltipStyle}
-              formatter={(v) => [v?.toFixed(3) + '%/hr', 'Marginal Gain']}
+              content={<GlassTooltip formatter={(v) => [v?.toFixed(3) + '%/hr', 'Marginal Gain']} />}
             />
             <Line type="monotone" dataKey="marginal" stroke="#F59E0B" strokeWidth={2} dot={{ fill: '#F59E0B', r: 3 }} name="Marginal Gain" />
           </LineChart>

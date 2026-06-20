@@ -22,7 +22,6 @@ export const fetchCIP           = (topN = 50)  => api.get('/cip', { params: { to
 export const fetchForecast      = (topN = 30)  => api.get('/forecast', { params: { top_n: topN } }).then((r) => r.data)
 export const fetchConfidence    = ()           => api.get('/confidence').then((r) => r.data)
 export const fetchOpportunities = (topN = 30)  => api.get('/opportunities', { params: { top_n: topN } }).then((r) => r.data)
-export const fetchValueProof    = ()           => api.get('/value-proof').then((r) => r.data)
 export const fetchStations      = ()           => api.get('/stations').then((r) => r.data)
 export const fetchCoverage      = ()           => api.get('/coverage').then((r) => r.data)
 export const postResourcePlan   = (officerHours)    => api.post('/plan/resource', { officer_hours: officerHours }).then((r) => r.data)

@@ -15,7 +15,6 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
 } from 'lucide-react'
 import useStore from '@/store/useStore'
 import { formatNumber } from '@/lib/utils'
@@ -29,7 +28,6 @@ const navItems = [
   { path: '/opportunities', label: 'Opportunities', icon: Target },
   { path: '/resource-planner', label: 'Resource Planner', icon: Users },
   { path: '/target-planner', label: 'Target Planner', icon: Crosshair },
-  { path: '/value-proof', label: 'Value Proof', icon: BadgeDollarSign },
   { path: '/stations', label: 'Station Analytics', icon: Building2 },
   { path: '/coverage', label: 'Coverage Analysis', icon: PieChart },
   { path: '/settings', label: 'Settings', icon: Settings },
@@ -46,8 +44,8 @@ export default function Sidebar() {
     >
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
         <div className="relative flex-shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan/30 to-accent-blue/30 flex items-center justify-center border border-accent-cyan/30 animate-pulse-glow">
-            <Sparkles className="w-5 h-5 text-accent-cyan" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+            <img src="/favicon.svg" alt="ParkSight Logo" className="w-full h-full" />
           </div>
         </div>
         {!sidebarCollapsed && (

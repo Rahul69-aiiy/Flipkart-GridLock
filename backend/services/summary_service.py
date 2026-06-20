@@ -11,9 +11,15 @@ from services.data_loader import DataStore
 
 logger = logging.getLogger(__name__)
 
+_CACHE: dict | None = None
+
 
 def get_summary() -> dict:
-    """Return a full dataset summary and data-quality report."""
+    """Return a full dataset summary and data-quality report (cached after first call)."""
+    global _CACHE
+    if _CACHE is not None:
+        return _CACHE
+
     store = DataStore.get_instance()
     df = store.df
 
@@ -113,7 +119,7 @@ def get_summary() -> dict:
     )
     temporal = {str(k): int(v) for k, v in temporal.items()}
 
-    return {
+    _CACHE = {
         "total_records": total_records,
         "original_records": store.raw_count,
         "filtered_records": filtered_records,
@@ -131,3 +137,4 @@ def get_summary() -> dict:
         "duplicate_records": 0,
         "temporal_distribution": temporal,
     }
+    return _CACHE

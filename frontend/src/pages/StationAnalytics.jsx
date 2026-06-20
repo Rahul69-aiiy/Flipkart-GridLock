@@ -17,15 +17,8 @@ import KPICard from '@/components/common/KPICard'
 import DataTable from '@/components/common/DataTable'
 import { LoadingState, ErrorState, useFetchData } from '@/components/common/DataStates'
 import { fetchStations } from '@/api/client'
+import GlassTooltip from '@/components/common/GlassTooltip'
 import { formatNumber } from '@/lib/utils'
-
-const chartTooltipStyle = {
-  backgroundColor: '#0B1526',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: '12px',
-  color: '#e2e8f0',
-  fontSize: '12px',
-}
 
 const PIE_COLORS = ['#00D4FF', '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#14B8A6', '#EC4899']
 
@@ -82,7 +75,7 @@ export default function StationAnalytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} angle={-30} textAnchor="end" height={60} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={chartTooltipStyle} labelFormatter={(_, p) => p?.[0]?.payload?.fullName} />
+              <Tooltip content={<GlassTooltip labelFormatter={(_, p) => p?.[0]?.payload?.fullName} />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
               <Bar dataKey="cip" fill="#8B5CF6" name="Total CIP" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -92,10 +85,10 @@ export default function StationAnalytics() {
           <h3 className="text-sm font-semibold text-white mb-4">Target Area Distribution</h3>
           <ResponsiveContainer width="100%" height={320}>
             <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={95} paddingAngle={2} dataKey="value">
+              <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={95} paddingAngle={2} dataKey="value" nameKey="name">
                 {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
               </Pie>
-              <Tooltip contentStyle={chartTooltipStyle} formatter={(v) => [formatNumber(v), 'Violations']} />
+              <Tooltip content={<GlassTooltip formatter={(v) => [formatNumber(v), 'Violations']} />} />
               <Legend wrapperStyle={{ fontSize: '10px', color: '#94a3b8' }} />
             </PieChart>
           </ResponsiveContainer>

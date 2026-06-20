@@ -12,6 +12,8 @@ from services.data_loader import DataStore
 
 logger = logging.getLogger(__name__)
 
+_CACHE: dict = {}
+
 
 def get_hotspots(top_n: int = 50) -> dict:
     """
@@ -27,6 +29,9 @@ def get_hotspots(top_n: int = 50) -> dict:
     dict
         Hotspot list and DBSCAN cluster information.
     """
+    if top_n in _CACHE:
+        return _CACHE[top_n]
+
     store = DataStore.get_instance()
     jcip = store.junction_cip
     df = store.df
@@ -112,9 +117,10 @@ def get_hotspots(top_n: int = 50) -> dict:
     except Exception as exc:
         logger.warning("DBSCAN clustering failed: %s", exc)
 
-    return {
+    _CACHE[top_n] = {
         "total_hotspots": len(hotspots),
         "method": "junction_aggregation + dbscan",
         "hotspots": hotspots,
         "dbscan_clusters": dbscan_result,
     }
+    return _CACHE[top_n]

@@ -128,7 +128,7 @@ export default function HotspotMap({
       }))
 
   return (
-    <div style={{ height, width: '100%' }} className="rounded-xl overflow-hidden border border-white/5">
+    <div style={{ height, width: '100%' }} className="relative rounded-xl overflow-hidden border border-white/5 group">
       <MapContainer
         center={center}
         zoom={zoom}
@@ -149,6 +149,31 @@ export default function HotspotMap({
           />
         )}
       </MapContainer>
+
+      {/* Floating Legend Panel */}
+      <div className="absolute bottom-4 left-4 z-[1000] bg-slate-950/80 backdrop-blur-md border border-white/10 rounded-xl p-3.5 shadow-2xl max-w-[200px] pointer-events-none transition-all duration-300">
+        <h4 className="text-[10px] font-bold text-white uppercase tracking-wider mb-2.5">CIP Severity</h4>
+        <div className="space-y-2">
+          {[
+            { label: 'Very High (≥ 80%)', color: '#EF4444' },
+            { label: 'High (60% - 80%)', color: '#F59E0B' },
+            { label: 'Medium (30% - 60%)', color: '#EAB308' },
+            { label: 'Low (10% - 30%)', color: '#10B981' },
+            { label: 'Very Low (< 10%)', color: '#3B82F6' },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
+              <span 
+                className="w-2.5 h-2.5 rounded-full shrink-0 border border-white/10" 
+                style={{ 
+                  backgroundColor: item.color,
+                  boxShadow: `0 0 8px ${item.color}`
+                }} 
+              />
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

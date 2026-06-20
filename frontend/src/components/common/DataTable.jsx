@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Search, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
+import useStore from '@/store/useStore'
 
 export default function DataTable({
   columns,
@@ -9,10 +10,17 @@ export default function DataTable({
   pageSize = 15,
   emptyMessage = 'No data available',
 }) {
-  const [search, setSearch] = useState('')
+  const globalSearch = useStore((s) => s.searchQuery)
+  const setGlobalSearch = useStore((s) => s.setSearchQuery)
+
+  const [search, setSearch] = useState(globalSearch)
   const [sortKey, setSortKey] = useState(null)
   const [sortDir, setSortDir] = useState('asc')
   const [page, setPage] = useState(0)
+
+  useEffect(() => {
+    setSearch(globalSearch)
+  }, [globalSearch])
 
   const filtered = useMemo(() => {
     let rows = [...data]
@@ -64,7 +72,11 @@ export default function DataTable({
           <input
             type="text"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(0) }}
+            onChange={(e) => { 
+              setSearch(e.target.value); 
+              setGlobalSearch(e.target.value); 
+              setPage(0); 
+            }}
             placeholder={searchPlaceholder}
             className="input-field pl-10"
           />

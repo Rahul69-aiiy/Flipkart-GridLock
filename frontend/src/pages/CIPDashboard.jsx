@@ -16,16 +16,9 @@ import { Activity, TrendingUp, AlertCircle, BarChart3 } from 'lucide-react'
 import KPICard from '@/components/common/KPICard'
 import DataTable from '@/components/common/DataTable'
 import { LoadingState, ErrorState, useFetchData } from '@/components/common/DataStates'
+import GlassTooltip from '@/components/common/GlassTooltip'
 import { fetchCIP } from '@/api/client'
 import { formatNumber } from '@/lib/utils'
-
-const chartTooltipStyle = {
-  backgroundColor: '#0B1526',
-  border: '1px solid rgba(255,255,255,0.1)',
-  borderRadius: '12px',
-  color: '#e2e8f0',
-  fontSize: '12px',
-}
 
 const PIE_COLORS = ['#EF4444', '#F59E0B', '#EAB308', '#10B981']
 
@@ -88,7 +81,7 @@ export default function CIPDashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
               <XAxis type="number" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="name" width={140} tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={chartTooltipStyle} formatter={(v) => [formatNumber(v, 1), 'CIP']} labelFormatter={(_, p) => p?.[0]?.payload?.fullName} />
+              <Tooltip content={<GlassTooltip labelFormatter={(_, p) => p?.[0]?.payload?.fullName} formatter={(v) => [formatNumber(v, 1), 'CIP']} />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
               <Bar dataKey="cip" fill="url(#cipBarGrad)" radius={[0, 6, 6, 0]} />
               <defs>
                 <linearGradient id="cipBarGrad" x1="0" y1="0" x2="1" y2="0">
@@ -104,12 +97,12 @@ export default function CIPDashboard() {
           <h3 className="text-sm font-semibold text-white mb-4">CIP Distribution</h3>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
+              <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value" nameKey="name">
                 {pieData.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={chartTooltipStyle} />
+              <Tooltip content={<GlassTooltip />} />
               <Legend wrapperStyle={{ fontSize: '11px', color: '#94a3b8' }} />
             </PieChart>
           </ResponsiveContainer>
@@ -123,7 +116,7 @@ export default function CIPDashboard() {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} angle={-30} textAnchor="end" height={70} />
             <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={chartTooltipStyle} formatter={(v) => [formatNumber(v, 1), 'Total CIP']} />
+            <Tooltip content={<GlassTooltip formatter={(v) => [formatNumber(v, 1), 'Total CIP']} />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
             <Bar dataKey="cip" fill="#3B82F6" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>

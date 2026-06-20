@@ -1,3 +1,4 @@
+// Trigger Vite restart for Tailwind config
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -9,10 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Production build outputs to backend/static so FastAPI can serve it.
-  // Override with VITE_OUT_DIR env var for Docker builds.
+  // Production build outputs to dist/ (Vercel deploys this automatically)
   build: {
-    outDir: process.env.VITE_OUT_DIR || '../backend/static',
+    outDir: 'dist',
     emptyOutDir: true,
   },
   server: {

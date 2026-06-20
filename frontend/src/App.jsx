@@ -8,16 +8,41 @@ import ConfidenceEngine from '@/pages/ConfidenceEngine'
 import Opportunities from '@/pages/Opportunities'
 import ResourcePlanner from '@/pages/ResourcePlanner'
 import TargetPlanner from '@/pages/TargetPlanner'
-import ValueProof from '@/pages/ValueProof'
 import StationAnalytics from '@/pages/StationAnalytics'
 import CoverageAnalysis from '@/pages/CoverageAnalysis'
 import SettingsPage from '@/pages/Settings'
+import LandingPage from '@/pages/Landing'
+import useStore from '@/store/useStore'
+
+function ProtectedRoute({ children }) {
+  const isAuthenticated = useStore((s) => s.isAuthenticated)
+  return isAuthenticated ? children : <Navigate to="/login" replace />
+}
+
+function PublicRoute({ children }) {
+  const isAuthenticated = useStore((s) => s.isAuthenticated)
+  return !isAuthenticated ? children : <Navigate to="/" replace />
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<DashboardLayout />}>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LandingPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Overview />} />
           <Route path="hotspots" element={<HotspotIntelligence />} />
           <Route path="cip" element={<CIPDashboard />} />
@@ -26,12 +51,11 @@ export default function App() {
           <Route path="opportunities" element={<Opportunities />} />
           <Route path="resource-planner" element={<ResourcePlanner />} />
           <Route path="target-planner" element={<TargetPlanner />} />
-          <Route path="value-proof" element={<ValueProof />} />
           <Route path="stations" element={<StationAnalytics />} />
           <Route path="coverage" element={<CoverageAnalysis />} />
           <Route path="settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
