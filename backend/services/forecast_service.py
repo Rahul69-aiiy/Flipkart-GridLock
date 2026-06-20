@@ -149,16 +149,39 @@ def get_forecasts(top_n: int = 30) -> dict:
 
     if len(train) >= 10 and len(test) > 0:
         try:
+            loaded_saved = False
             # Try loading saved model first
             if os.path.exists(model_path) and os.path.exists(encoder_path):
-                model = joblib.load(model_path)
-                le = joblib.load(encoder_path)
-                # Re-encode with loaded encoder
-                wdf_clean["junction_id"] = le.transform(wdf_clean["junction_name"])
+                saved_model = joblib.load(model_path)
+                saved_le = joblib.load(encoder_path)
+                # Check if all current junction names are known to the saved encoder
+                current_junctions = set(wdf_clean["junction_name"].unique())
+                known_junctions = set(saved_le.classes_)
+                unseen = current_junctions - known_junctions
+                if unseen:
+                    logger.warning(
+                        "Saved LabelEncoder missing %d junction(s): %s. "
+                        "Re-fitting encoder and retraining model.",
+                        len(unseen),
+                        list(unseen)[:5],  # log at most 5 names
+                    )
+                else:
+                    # All junctions are known — safe to use saved encoder
+                    le = saved_le
+                    model = saved_model
+                    wdf_clean["junction_id"] = le.transform(wdf_clean["junction_name"])
+                    test = wdf_clean[wdf_clean["is_test"]]
+                    train = wdf_clean[~wdf_clean["is_test"]]
+                    loaded_saved = True
+                    logger.info("Loaded saved XGBoost model from %s", model_path)
+
+            if not loaded_saved:
+                # (Re-)fit encoder on current data and train a fresh model
+                le = LabelEncoder()
+                wdf_clean["junction_id"] = le.fit_transform(wdf_clean["junction_name"])
                 test = wdf_clean[wdf_clean["is_test"]]
                 train = wdf_clean[~wdf_clean["is_test"]]
-                logger.info("Loaded saved XGBoost model from %s", model_path)
-            else:
+
                 model = XGBRegressor(
                     n_estimators=100,
                     max_depth=5,
@@ -170,7 +193,7 @@ def get_forecasts(top_n: int = 30) -> dict:
                     train[feature_cols].values,
                     train["weekly_cip"].values,
                 )
-                # Save
+                # Save updated model and encoder
                 os.makedirs(settings.model_dir, exist_ok=True)
                 joblib.dump(model, model_path)
                 joblib.dump(le, encoder_path)
@@ -196,10 +219,13 @@ def get_forecasts(top_n: int = 30) -> dict:
         hist_avg = float(jg["weekly_cip"].mean())
 
         if use_xgb and model is not None:
-            last_row = jg.iloc[-1]
             feats = _add_lag_features(jg)
             last_feats = feats.iloc[-1:]
+            # Encode junction_id for prediction — safe because le was
+            # fit on all current junctions (re-fitted above if needed)
             try:
+                last_feats = last_feats.copy()
+                last_feats["junction_id"] = le.transform(last_feats["junction_name"])
                 pred = float(model.predict(last_feats[feature_cols].values)[0])
             except Exception:
                 pred = float(jg["weekly_cip"].tail(4).mean())

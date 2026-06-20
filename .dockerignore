@@ -11,3 +11,11 @@ backend/trained_models
 .vscode
 *.md
 analyze_*.py
+
+# Data files — prevent 104 MB+ dataset from entering build context
+*.csv
+*.xlsx
+*.parquet
+
+# Environment secrets
+.env
