@@ -10,13 +10,13 @@
 
 ## Key Features
 
-- ** Congestion Impact Potential (CIP):** Scoring framework for evaluating the real impact of violations.
-- ** Hotspot Intelligence:** Spatial hotspot discovery using DBSCAN clustering.
-- ** Predictive Forecasting:** Junction-level congestion forecasting using XGBoost & Moving Averages.
-- ** Confidence Scoring:** Data reliability and consistency validation.
-- ** Opportunity Ranking:** Engine for targeted, high-impact enforcement.
-- ** Resource Optimization:** Google OR-Tools CP-SAT for constraint-based deployment planning.
-- ** Analytics Dashboard:** Station-level performance analytics and coverage-efficiency analysis.
+- Congestion Impact Potential (CIP) : Scoring framework for evaluating the real impact of violations.
+- Hotspot Intelligence : Spatial hotspot discovery using DBSCAN clustering.
+- Predictive Forecasting : Junction-level congestion forecasting using XGBoost & Moving Averages.
+- Confidence Scoring : Data reliability and consistency validation.
+- Opportunity Ranking : Engine for targeted, high-impact enforcement.
+- Resource Optimization : Google OR-Tools CP-SAT for constraint-based deployment planning.
+- Analytics Dashboard : Station-level performance analytics and coverage-efficiency analysis.
 
 ---
 
