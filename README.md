@@ -96,25 +96,33 @@ Dashboard Access: [http://localhost:5173](http://localhost:5173) *(Proxies API t
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 flipkart/
-├── backend/
+├── backend/                  # FastAPI backend
 │   ├── app.py                # FastAPI entry point
+│   ├── requirements.txt      # Python dependencies
 │   ├── routes/               # API endpoints
+│   ├── schemas/              # Pydantic validation schemas
 │   ├── services/             # Core business logic & engines
 │   ├── models/               # Data models
 │   ├── data/                 # Raw/Processed datasets
-│   └── trained_models/       # ML Models
+│   ├── trained_models/       # ML Models
+│   └── utils/                # Utility scripts & helpers
 ├── frontend/                 # React dashboard (Vite + Tailwind)
-│   ├── src/
-│   │   ├── api/              # Axios API client
-│   │   ├── components/       # Reusable UI components
-│   │   ├── pages/            # 10 dashboard pages + settings
-│   │   └── store/            # Zustand global state
-├── Dockerfile                # Docker configuration
-└── docker-compose.yml        # Docker compose setup
+│   ├── package.json          # Node dependencies
+│   ├── tailwind.config.js    # Tailwind configuration
+│   ├── vite.config.js        # Vite configuration
+│   └── src/
+│       ├── api/              # Axios API client
+│       ├── components/       # Reusable UI components
+│       ├── lib/              # Helper libraries/utilities
+│       ├── pages/            # Dashboard pages
+│       ├── store/            # Zustand global state
+│       ├── App.jsx           # Root React component
+│       └── main.jsx          # React entry point
+└── README.md                 # Project documentation
 ```
 
 ---
