@@ -6,6 +6,7 @@ with its data-derived required_officer_hours and peak_window.
 """
 
 import logging
+from functools import lru_cache
 
 from services.data_loader import DataStore
 from services.forecast_service import get_forecasts
@@ -14,6 +15,7 @@ from services.confidence_service import get_confidence_scores
 logger = logging.getLogger(__name__)
 
 
+@lru_cache(maxsize=4)
 def get_opportunities(top_n: int = 30) -> dict:
     """
     Compute opportunity_score = predicted_cip × confidence_score for

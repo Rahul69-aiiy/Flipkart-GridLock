@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Sidebar from './Sidebar'
 import TopNav from './TopNav'
+import ErrorBoundary from '@/components/common/ErrorBoundary'
 import useStore from '@/store/useStore'
 
 export default function DashboardLayout() {
@@ -25,7 +26,9 @@ export default function DashboardLayout() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
             >
-              <Outlet />
+              <ErrorBoundary resetKey={location.pathname}>
+                <Outlet />
+              </ErrorBoundary>
             </motion.div>
           </AnimatePresence>
         </main>

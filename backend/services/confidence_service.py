@@ -5,6 +5,8 @@ data density, and historical depth.
 """
 
 import logging
+from functools import lru_cache
+
 import numpy as np
 
 from services.data_loader import DataStore
@@ -12,6 +14,7 @@ from services.data_loader import DataStore
 logger = logging.getLogger(__name__)
 
 
+@lru_cache(maxsize=1)
 def get_confidence_scores() -> dict:
     """
     Compute a confidence score for each junction based on:

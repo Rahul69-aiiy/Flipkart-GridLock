@@ -6,6 +6,7 @@ with lower MAE.  Trains on weekly CIP time-series per junction.
 
 import logging
 import os
+from functools import lru_cache
 
 import numpy as np
 import pandas as pd
@@ -57,6 +58,7 @@ def _add_lag_features(wdf: pd.DataFrame) -> pd.DataFrame:
     return wdf
 
 
+@lru_cache(maxsize=4)
 def get_forecasts(top_n: int = 30) -> dict:
     """
     Produce next-period CIP forecasts per junction.
