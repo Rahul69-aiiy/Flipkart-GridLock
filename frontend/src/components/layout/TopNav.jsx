@@ -23,7 +23,7 @@ const pageTitles = {
 
 export default function TopNav() {
   const location = useLocation()
-  const { sidebarCollapsed, searchQuery, setSearchQuery, apiHealthy, setApiHealthy } = useStore()
+  const { searchQuery, setSearchQuery, apiHealthy, setApiHealthy } = useStore()
   const title = pageTitles[location.pathname] || 'Dashboard'
 
   // Date range from real backend data
@@ -36,7 +36,6 @@ export default function TopNav() {
   return (
     <header
       className="sticky top-0 z-30 bg-navy-950/80 backdrop-blur-xl border-b border-white/5 px-6 py-3"
-      style={{ marginLeft: sidebarCollapsed ? 72 : 260 }}
     >
       <div className="flex items-center justify-between gap-4">
         <div>

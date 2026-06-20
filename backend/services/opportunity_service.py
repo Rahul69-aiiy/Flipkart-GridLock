@@ -35,7 +35,11 @@ def get_opportunities(top_n: int = 30) -> dict:
     dict
         Formula description, count, and ranked opportunity list.
     """
-    forecasts_result = get_forecasts(top_n=200)
+    store = DataStore.get_instance()
+    total_junctions = len(store.junction_cip) if not store.junction_cip.empty else 0
+    forecast_limit = max(total_junctions, top_n)
+
+    forecasts_result = get_forecasts(top_n=forecast_limit)
     confidence_result = get_confidence_scores()
 
     forecasts = forecasts_result.get("forecasts", [])
@@ -53,7 +57,6 @@ def get_opportunities(top_n: int = 30) -> dict:
     confidence_map = {s["junction_name"]: s for s in scores}
 
     # Officer-hours lookup from DataStore
-    store = DataStore.get_instance()
     jcip = store.junction_cip
     jhours = store.junction_hours
 
@@ -101,13 +104,21 @@ def get_opportunities(top_n: int = 30) -> dict:
         })
 
     # Sort and rank
-    opportunities.sort(key=lambda o: o["opportunity_score"], reverse=True)
+    # Sort and rank
+    opportunities.sort(
+        key=lambda o: o["opportunity_score"],
+        reverse=True
+    )
+
+    total_opportunities = len(opportunities)
+
     for rank, o in enumerate(opportunities[:top_n], start=1):
         o["rank"] = rank
+
     opportunities = opportunities[:top_n]
 
     return {
-        "formula": "opportunity_score = predicted_cip × confidence_score",
-        "total_junctions": len(opportunities),
-        "opportunities": opportunities,
+    "formula": "opportunity_score = predicted_cip × confidence_score",
+    "total_junctions": total_opportunities,
+    "opportunities": opportunities,
     }

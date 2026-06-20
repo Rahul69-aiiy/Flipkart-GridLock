@@ -5,9 +5,7 @@ and derives data-driven officer-hours per junction from hourly violation
 concentration patterns.
 """
 
-import json
 import logging
-from datetime import timedelta
 from typing import Optional
 
 import numpy as np
@@ -100,20 +98,17 @@ class DataStore:
         raw["created_datetime"] = pd.to_datetime(
             raw["created_datetime"], errors="coerce", utc=True
         )
-        raw["created_datetime_ist"] = raw["created_datetime"] + timedelta(
-            hours=5, minutes=30
+        raw["created_datetime_ist"] = raw["created_datetime"].dt.tz_convert(
+            "Asia/Kolkata"
         )
         raw["hour_ist"] = raw["created_datetime_ist"].dt.hour
         raw["day_of_week"] = raw["created_datetime_ist"].dt.dayofweek
         raw["day_name"] = raw["created_datetime_ist"].dt.day_name()
         raw["month"] = raw["created_datetime_ist"].dt.month
         raw["year"] = raw["created_datetime_ist"].dt.year
-        raw["week_number"] = (
-            raw["created_datetime_ist"]
-            .dt.isocalendar()
-            .week.fillna(0)
-            .astype(int)
-        )
+        iso_calendar = raw["created_datetime_ist"].dt.isocalendar()
+        raw["iso_year"] = iso_calendar.year.fillna(0).astype(int)
+        raw["week_number"] = iso_calendar.week.fillna(0).astype(int)
         raw["is_peak_hour"] = raw["hour_ist"].isin(PEAK_HOURS_IST)
 
         # 5. Weight columns
@@ -190,7 +185,9 @@ class DataStore:
 
         # Weekly CIP series (stored as dict per junction)
         named["week_key"] = (
-            named["year"].astype(str) + "-W" + named["week_number"].astype(str).str.zfill(2)
+            named["iso_year"].astype(str)
+            + "-W"
+            + named["week_number"].astype(str).str.zfill(2)
         )
         weekly = (
             named.groupby(["junction_name", "week_key"])["record_cip"]

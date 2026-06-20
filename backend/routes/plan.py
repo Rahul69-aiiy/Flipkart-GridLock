@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from schemas.plan import (
     ResourcePlanRequest,
@@ -6,6 +8,8 @@ from schemas.plan import (
     TargetPlanResponse,
 )
 from services import plan_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["Enforcement Planning"])
 
@@ -20,7 +24,8 @@ def plan_resource(request: ResourcePlanRequest):
     try:
         return plan_service.plan_by_resource(request.officer_hours)
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        logger.exception("Failed to solve resource plan")
+        raise HTTPException(status_code=500, detail="Internal server error") from exc
 
 
 @router.post(
@@ -33,4 +38,5 @@ def plan_target(request: TargetPlanRequest):
     try:
         return plan_service.plan_by_target(request.target_coverage)
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        logger.exception("Failed to solve target plan")
+        raise HTTPException(status_code=500, detail="Internal server error") from exc

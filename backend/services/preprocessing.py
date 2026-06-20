@@ -6,7 +6,6 @@ JSON parsing, timezone conversion, and normalisation.
 
 import json
 import logging
-from datetime import timedelta
 
 import numpy as np
 import pandas as pd
@@ -79,7 +78,10 @@ def compute_ist_hour(dt_utc) -> int:
     if dt_utc is None or pd.isna(dt_utc):
         return 0
     try:
-        ist_dt = dt_utc + timedelta(hours=5, minutes=30)
+        timestamp = pd.Timestamp(dt_utc)
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.tz_localize("UTC")
+        ist_dt = timestamp.tz_convert("Asia/Kolkata")
         return ist_dt.hour
     except Exception:
         return 0

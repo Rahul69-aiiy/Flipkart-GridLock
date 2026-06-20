@@ -7,6 +7,9 @@ import { formatNumber } from '@/lib/utils'
 
 const BENGALURU_CENTER = [12.9716, 77.5946]
 
+const hasValidCoordinates = ({ latitude, longitude }) =>
+  Number.isFinite(latitude) && Number.isFinite(longitude)
+
 function createGlowIcon(color) {
   return L.divIcon({
     className: 'custom-marker',
@@ -27,7 +30,7 @@ function HeatmapLayer({ points }) {
   useEffect(() => {
     if (!points?.length) return
     const heatData = points
-      .filter((p) => p.latitude && p.longitude)
+      .filter(hasValidCoordinates)
       .map((p) => [p.latitude, p.longitude, p.intensity || 0.5])
     if (!heatData.length) return
     const heat = L.heatLayer(heatData, {
@@ -58,7 +61,7 @@ function ClusterLayer({ markers, getColor }) {
       showCoverageOnHover: false,
     })
     markers.forEach((m) => {
-      if (!m.latitude || !m.longitude) return
+      if (!hasValidCoordinates(m)) return
       const color = getColor ? getColor(m) : '#00D4FF'
       const marker = L.marker([m.latitude, m.longitude], { icon: createGlowIcon(color) })
       const popupContent = m.popupContent || `
@@ -98,7 +101,7 @@ export default function HotspotMap({
   showClusters = true,
   renderPopup,
 }) {
-  const validMarkers = markers.filter((m) => m.latitude && m.longitude)
+  const validMarkers = markers.filter(hasValidCoordinates)
   const maxCip = Math.max(...validMarkers.map((m) => m.total_cip || m.avg_cip || 0), 1)
 
   const defaultGetColor = (m) => {

@@ -51,9 +51,18 @@ app = FastAPI(
 )
 
 # CORS — allow all origins in dev; in prod the frontend is same-origin so this is a no-op
+def _get_allowed_origins() -> list[str]:
+    """Read comma-separated CORS origins while keeping local dev usable."""
+    raw_origins = os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8000,http://127.0.0.1:8000",
+    )
+    return [origin.strip() for origin in raw_origins.split(",") if origin.strip()]
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_get_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -88,9 +97,10 @@ def health():
     """Health-check endpoint."""
     from services.data_loader import DataStore
     store = DataStore.get_instance()
+    records_loaded = len(store.df)
     return {
-        "status": "healthy",
-        "records_loaded": len(store.df),
+        "status": "healthy" if records_loaded > 0 else "degraded",
+        "records_loaded": records_loaded,
         "junctions": len(store.junction_cip),
     }
 

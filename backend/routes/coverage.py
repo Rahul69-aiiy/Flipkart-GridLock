@@ -1,6 +1,10 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from schemas.coverage import CoverageResponse
 from services import coverage_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["Coverage Curve"])
 
@@ -15,4 +19,5 @@ def get_coverage():
     try:
         return coverage_service.get_coverage_curve()
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        logger.exception("Failed to get coverage curve")
+        raise HTTPException(status_code=500, detail="Internal server error") from exc

@@ -34,7 +34,8 @@ def get_value_proof() -> dict:
     """
     store = DataStore.get_instance()
     junction_cip = store.junction_cip.copy()
-    opp_result = get_opportunities()
+    max_deployment_size = max(DEPLOYMENT_SIZES)
+    opp_result = get_opportunities(top_n=max_deployment_size)
     opportunities = opp_result.get("opportunities", [])
 
     if junction_cip.empty or not opportunities:
