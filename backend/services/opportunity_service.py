@@ -104,7 +104,6 @@ def get_opportunities(top_n: int = 30) -> dict:
         })
 
     # Sort and rank
-    # Sort and rank
     opportunities.sort(
         key=lambda o: o["opportunity_score"],
         reverse=True

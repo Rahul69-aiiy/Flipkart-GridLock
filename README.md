@@ -10,17 +10,17 @@
 
 ## Key Features
 
-- ** Congestion Impact Potential (CIP):** Scoring framework for evaluating the real impact of violations.
-- ** Hotspot Intelligence:** Spatial hotspot discovery using DBSCAN clustering.
-- ** Predictive Forecasting:** Junction-level congestion forecasting using XGBoost & Moving Averages.
-- ** Confidence Scoring:** Data reliability and consistency validation.
-- ** Opportunity Ranking:** Engine for targeted, high-impact enforcement.
-- ** Resource Optimization:** Google OR-Tools CP-SAT for constraint-based deployment planning.
-- ** Analytics Dashboard:** Station-level performance analytics and coverage-efficiency analysis.
+- Congestion Impact Potential (CIP) : Scoring framework for evaluating the real impact of violations.
+- Hotspot Intelligence : Spatial hotspot discovery using DBSCAN clustering.
+- Predictive Forecasting : Junction-level congestion forecasting using XGBoost & Moving Averages.
+- Confidence Scoring : Data reliability and consistency validation.
+- Opportunity Ranking : Engine for targeted, high-impact enforcement.
+- Resource Optimization : Google OR-Tools CP-SAT for constraint-based deployment planning.
+- Analytics Dashboard : Station-level performance analytics and coverage-efficiency analysis.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 **Frontend Command Center**<br/>
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
@@ -39,7 +39,7 @@
 
 ---
 
-## 🏗️ System Architecture & Engines
+## System Architecture & Engines
 
 | Engine | Endpoint | Description |
 |--------|----------|-------------|
@@ -56,7 +56,7 @@
 
 ---
 
-## 🧠 Machine Learning & Optimization Pipeline
+## Machine Learning & Optimization Pipeline
 
 ```mermaid
 graph TD;
@@ -74,7 +74,7 @@ graph TD;
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Backend Setup
 ```bash
@@ -100,29 +100,37 @@ Dashboard Access: [http://localhost:5173](http://localhost:5173) *(Proxies API t
 
 ```text
 flipkart/
-├── backend/
+├── backend/                  # FastAPI backend
 │   ├── app.py                # FastAPI entry point
+│   ├── requirements.txt      # Python dependencies
 │   ├── routes/               # API endpoints
+│   ├── schemas/              # Pydantic validation schemas
 │   ├── services/             # Core business logic & engines
 │   ├── models/               # Data models
 │   ├── data/                 # Raw/Processed datasets
-│   └── trained_models/       # ML Models
+│   ├── trained_models/       # ML Models
+│   └── utils/                # Utility scripts & helpers
 ├── frontend/                 # React dashboard (Vite + Tailwind)
-│   ├── src/
-│   │   ├── api/              # Axios API client
-│   │   ├── components/       # Reusable UI components
-│   │   ├── pages/            # 10 dashboard pages + settings
-│   │   └── store/            # Zustand global state
-├── Dockerfile                # Docker configuration
-└── docker-compose.yml        # Docker compose setup
+│   ├── package.json          # Node dependencies
+│   ├── tailwind.config.js    # Tailwind configuration
+│   ├── vite.config.js        # Vite configuration
+│   └── src/
+│       ├── api/              # Axios API client
+│       ├── components/       # Reusable UI components
+│       ├── lib/              # Helper libraries/utilities
+│       ├── pages/            # Dashboard pages
+│       ├── store/            # Zustand global state
+│       ├── App.jsx           # Root React component
+│       └── main.jsx          # React entry point
+└── README.md                 # Project documentation
 ```
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
-- 🔄 Real-time traffic camera integration
-- 🧩 Explainable AI (SHAP) for decision transparency
-- 📱 Live officer deployment recommendations & mobile app
-- 🏙️ City-wide congestion simulation
-- 🌍 Multi-city scalability
+- Real-time traffic camera integration
+- Explainable AI (SHAP) for decision transparency
+- Live officer deployment recommendations & mobile app
+- City-wide congestion simulation
+- Multi-city scalability

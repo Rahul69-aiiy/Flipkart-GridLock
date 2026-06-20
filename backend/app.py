@@ -28,22 +28,22 @@ STATIC_DIR = Path(__file__).parent / "static"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Preload dataset and prewarm caches on startup."""
-    logger.info("🚀 ParkSight AI starting — preloading dataset...")
+    logger.info("ParkSight AI starting — preloading dataset...")
     from services.data_loader import DataStore
     store = DataStore.get_instance()
     logger.info(
-        "✅ Dataset loaded: %d records, %d junctions",
+        "Dataset loaded: %d records, %d junctions",
         len(store.df),
         len(store.junction_cip),
     )
     # Prewarm the most expensive endpoints so first request is instant
     try:
-        logger.info("🔥 Prewarming caches...")
+        logger.info("Prewarming caches...")
         from services import summary_service, hotspot_service
         summary_service.get_summary()
         hotspot_service.get_hotspots(100)  # pre-cache top-100 used by Overview map
         hotspot_service.get_hotspots(50)   # pre-cache default top-50
-        logger.info("✅ Caches primed — all endpoints ready")
+        logger.info("Caches primed — all endpoints ready")
     except Exception as exc:
         logger.warning("Cache prewarm failed (non-fatal): %s", exc)
     yield
