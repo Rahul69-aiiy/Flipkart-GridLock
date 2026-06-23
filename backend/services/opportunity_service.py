@@ -1,7 +1,7 @@
 """
 Module 5: Opportunity Engine
 Combines forecast predicted_cip with confidence_score to produce a
-ranked list of enforcement opportunities.  Enriches each junction
+ranked list of enforcement opportunities.Enriches each junction
 with its data-derived required_officer_hours and peak_window.
 """
 
